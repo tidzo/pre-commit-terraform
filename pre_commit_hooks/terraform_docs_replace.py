@@ -25,13 +25,22 @@ def main(argv=None):
         help='[deprecated]',
     )
     parser.add_argument('filenames', nargs='*', help='Filenames to check.')
+
+    parser.add_argument(
+        '--header-from', dest='header', default=argparse.SUPPRESS,
+    )
+
     args = parser.parse_args(argv)
 
+    header_set = hasattr(args, 'header')
+ 
     dirs = []
     for filename in args.filenames:
         if (os.path.realpath(filename) not in dirs and
                 (filename.endswith(".tf") or filename.endswith(".tfvars"))):
             dirs.append(os.path.dirname(filename))
+
+    if header_set:
 
     retval = 0
 
