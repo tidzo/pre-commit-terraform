@@ -36,11 +36,13 @@ def main(argv=None):
  
     dirs = []
     for filename in args.filenames:
-        if (os.path.realpath(filename) not in dirs and
-                (filename.endswith(".tf") or filename.endswith(".tfvars"))):
-            dirs.append(os.path.dirname(filename))
+        if os.path.realpath(filename) not in dirs:
 
-    if header_set:
+            if ( (filename.endswith(".tf")) or
+                 (filename.endswith(".tfvars")) or
+                 (header_set and filename == args.header) ):
+
+                dirs.append(os.path.dirname(filename))
 
     retval = 0
 
@@ -50,6 +52,8 @@ def main(argv=None):
             procArgs.append('terraform-docs')
             if args.sort:
                 procArgs.append('--sort-by-required')
+            if header_set:
+                procArgs.append("--header-from {header}".format(header=args.header))
             procArgs.append('md')
             procArgs.append("./{dir}".format(dir=dir))
             procArgs.append('>')
